@@ -1,0 +1,105 @@
+﻿@page "/SearchAdult"
+@using Data
+@using A1.Models
+
+<h3>SearchAdult</h3>
+
+<p> Filter by Firstname: <input type="text" @oninput="@((arg) => FilterByName(arg))" style="width:50px"/> </p>
+
+@if (_adultList == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!_adultList.Any())
+{
+    <p>
+        <em>No adults exist. Please add some.</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Hair Color</th>
+            <th>Eye Color</th>
+            <th>Age</th>
+            <th>Weight</th>
+            <th>Height</th>
+            <th>Sex</th>
+            <th>Job Title</th>
+            <th>Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (Adult adult in _adultListToShow)
+        {
+            <tr>
+                <td>@adult.Id</td>
+                <td>@adult.FirstName</td>
+                <td>@adult.LastName</td>
+                <td>@adult.HairColor</td>
+                <td>@adult.EyeColor</td>
+                <td>@adult.Age</td>
+                <td>@adult.Weight</td>
+                <td>@adult.Height</td>
+                <td>@adult.Sex</td>
+                <td>@adult.JobTitle.JobTitle</td>
+                <td>@adult.JobTitle.Salary</td>
+                <td>
+                    <button @onclick="@(() => RemoveAdult(adult))">
+                        <i class="oi oi-trash" style="color:red"/>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    
+    [Inject] public IAdultService Service { get; set; }
+    
+    private IList<Adult> _adultList;
+    private IList<Adult> _adultListToShow;
+    private string _filterName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _adultList = await Service.ReadData();
+        _adultListToShow = _adultList;
+    }
+
+    private async Task RemoveAdult(Adult adult)
+    {
+        _adultList.Remove(adult);
+        await Service.SaveChanges(_adultList);
+    }
+
+    private async Task FilterByName(ChangeEventArgs changeEventArgs)
+    {
+        _filterName = changeEventArgs.Value?.ToString();
+        await ExecuteFilter(_filterName);
+    }
+
+    private async Task ExecuteFilter(string filterName)
+    {
+        IList<Adult> tempList = new List<Adult>();
+        
+        foreach (Adult adult in _adultList)
+        {
+            if (adult.FirstName.Contains(filterName))
+            {
+                tempList.Add(adult);
+            }
+        }
+        _adultListToShow = tempList;
+    }
+
+}

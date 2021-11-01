@@ -1,0 +1,107 @@
+﻿@page "/AddAdult"
+@using Data
+@using A1.Models
+<h3>AddAdult</h3>
+
+<EditForm Model="@adult" OnValidSubmit="@_AddAdult">
+    <DataAnnotationsValidator/> <ValidationSummary/>
+    <div class="form-group">
+        <label>Id:</label>
+        <input type="text" placeholder="id" @bind-value="id"/>
+    </div>
+    <div class="form-group">
+            <label>First Name:</label>
+            <input type="text" placeholder="first name" @bind-value="firstName"/>
+        </div>
+    <div class="form-group">
+        <label>Last Name:</label>
+        <input type="text" placeholder="last name" @bind-value="lastName"/>
+    </div>
+    <div class="form-group">
+        <label>Hair Color:</label>
+        <input type="text" placeholder="hair color" @bind-value="hairColor"/>
+    </div>
+    <div class="form-group">
+        <label>Eye Color:</label>
+        <input type="text" placeholder="eye color" @bind-value="eyeColor"/>
+    </div>
+    <div class="form-group">
+        <label>Age:</label>
+        <input type="text" placeholder="age" @bind-value="age"/>
+    </div>
+    <div class="form-group">
+        <label>Weight:</label>
+        <input type="text" placeholder="weight" @bind-value="weight"/>
+    </div>
+    <div class="form-group">
+        <label>Height:</label>
+        <input type="text" placeholder="height" @bind-value="height"/>
+    </div>
+    <div class="form-group">
+        <label>Sex:</label>
+        <input type="text" placeholder="sex" @bind-value="sex"/>
+    </div>
+    <div class="form-group">
+        <label>Job Title:</label>
+        <input type="text" placeholder="job title" @bind-value="jobTitle"/>
+    </div>
+    <div class="form-group">
+        <label>Salary:</label>
+        <input type="text" placeholder="salary" @bind-value="salary"/>
+    </div>
+    <p class="actions">
+            <button class="btn btn-outline-dark" type="submit">Add</button>
+        </p>
+</EditForm>
+
+@code {
+    
+    [Inject] public IAdultService Service { get; set; }
+    
+    private IList<Adult> adultList = new List<Adult>();
+    private Adult adult = new Adult();
+    private Job job = new Job();
+    private int id;
+    private string firstName;
+    private string lastName;
+    private string hairColor;
+    private string eyeColor;
+    private int age;
+    private float weight;
+    private int height;
+    private string sex;
+    private string jobTitle;
+    private int salary;
+
+
+    private async Task _AddAdult()
+    {
+       
+        try
+        {
+            job.JobTitle = jobTitle;
+            job.Salary = salary;
+
+            adult.JobTitle = job;
+            adult.Id = id;
+            adult.FirstName = firstName;
+            adult.LastName = lastName;
+            adult.HairColor = hairColor;
+            adult.EyeColor = eyeColor;
+            adult.Age = age;
+            adult.Weight = weight;
+            adult.Height = height;
+            adult.Sex = sex;
+            
+            adultList = Service.ReadData().Result;
+            adultList.Add(adult);
+            await Service.SaveChanges(adultList);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+}
