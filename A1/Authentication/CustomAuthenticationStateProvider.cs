@@ -43,7 +43,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider {
 
         ClaimsIdentity identity = new ClaimsIdentity();
         try {
-            User user = userService.ValidateUser(username, password);
+            User user = userService.ValidateUser(username, password).Result;
             identity = SetupClaimsForUser(user);
             string serialisedData = JsonSerializer.Serialize(user);
             await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);

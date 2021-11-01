@@ -36,11 +36,11 @@
     private string password;
     private string errorMessage;
 
-    public async Task PerformLogin() {
+    private async Task PerformLogin() {
         errorMessage = "";
         try
         {
-            Service.ValidateUser(username, password);
+            await Service.ValidateUser(username, password);
             //await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(username, password);
             username = "";
             password = "";

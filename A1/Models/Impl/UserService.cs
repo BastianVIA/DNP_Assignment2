@@ -15,7 +15,7 @@ namespace A1.Models.Impl
             users = _client.GetUsers().Result;
         }
         
-        public User ValidateUser(string userName, string password) {
+        public async Task<User> ValidateUser(string userName, string password) {
             User first = users.FirstOrDefault(user => user.UserName.Equals(userName));
             if (first == null) {
                 throw new Exception("User not found");

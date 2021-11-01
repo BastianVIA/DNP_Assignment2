@@ -15,9 +15,9 @@ namespace A1.Models.Impl
             return await _client.ReadData();
         }
 
-        public Task SaveChanges(IList<Adult> adults)
+        public async Task SaveChanges(IList<Adult> adults)
         {
-            return _client.SaveChanges(adults);
+            await _client.SaveChanges(adults);
         }
     }
 }
